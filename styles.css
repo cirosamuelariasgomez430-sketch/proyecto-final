@@ -19,15 +19,15 @@ body{
 /* ================================= */
 
 header{
-    background:#0a0909;
-    color:white;
+    background:#e99802;
+    color:rgb(0, 0, 0);
     display:flex;
     justify-content:space-between;
     align-items:center;
     flex-wrap:wrap;
     gap:20px;
     padding:20px 40px;
-    box-shadow:0 5px 10px rgba(0,0,0,.2);
+    box-shadow:0 5px 10px rgb(255, 0, 0);
 }
 
 .logo{
@@ -69,8 +69,8 @@ header{
     border:none;
     padding:12px 20px;
     border-radius:8px;
-    background:#550604;
-    color:white;              /* antes era negro sobre negro */
+    background:#629805;
+    color:rgb(113, 222, 4);              /* antes era negro sobre negro */
     cursor:pointer;
     transition:.3s;
 }
