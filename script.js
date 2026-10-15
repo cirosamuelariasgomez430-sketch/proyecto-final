@@ -1,4 +1,3 @@
-
 // ===========================================
 // POKEDEX SPA
 // API: https://pokeapi.co
@@ -40,11 +39,11 @@ const pokemonCounter = document.getElementById("pokemonCounter");
 // ==============================
 
 function mostrarLoading() {
-    loading?.classList.remove("hidden");
+    loading.classList.remove("hidden");
 }
 
 function ocultarLoading() {
-    loading?.classList.add("hidden");
+    loading.classList.add("hidden");
 }
 
 // ==============================
@@ -52,114 +51,113 @@ function ocultarLoading() {
 // ==============================
 
 function mostrarError(texto = "Pokémon no encontrado.") {
+
     errorMessage.textContent = texto;
+
     errorMessage.classList.remove("hidden");
 
     setTimeout(() => {
+
         errorMessage.classList.add("hidden");
-    }, 3000);
+
+    }, 2500);
+
 }
 
 // ==============================
-// OBTENER LISTA DE POKÉMON
+// OBTENER LISTA
 // ==============================
 
 async function cargarPokemon() {
+
     mostrarLoading();
+
     pokemonContainer.innerHTML = "";
 
     try {
+
         const respuesta = await fetch(
             `${URL}?offset=${offset}&limit=${limite}`
         );
-
-        if (!respuesta.ok) {
-            throw new Error("No se pudo obtener la lista de Pokémon");
-        }
 
         const datos = await respuesta.json();
 
         pokemonCounter.textContent =
             `${datos.results.length} Pokémon`;
 
-        // Consultar los detalles en paralelo
-        const promesas = datos.results.map(async (pokemon) => {
+        for (const pokemon of datos.results) {
+
             const respuestaPokemon = await fetch(pokemon.url);
 
-            if (!respuestaPokemon.ok) {
-                throw new Error(`Error cargando ${pokemon.name}`);
-            }
+            const info = await respuestaPokemon.json();
 
-            return respuestaPokemon.json();
-        });
+            crearCard(info);
 
-        const pokemones = await Promise.all(promesas);
-
-        pokemones.forEach((pokemon) => {
-            crearCard(pokemon);
-        });
-
-        // Actualizar botones de paginación
-        if (previousBtn) {
-            previousBtn.disabled = offset === 0;
         }
-
-        if (nextBtn) {
-            nextBtn.disabled = !datos.next;
-        }
-
-        // Limpiar la ficha técnica al cargar otra página
-        // detailContainer.innerHTML = "";
 
     } catch (error) {
-        console.error("Error al cargar Pokémon:", error);
-        mostrarError("Error cargando la Pokédex. Intenta nuevamente.");
 
-    } finally {
-        ocultarLoading();
+        mostrarError("Error cargando la Pokédex");
+
     }
+
+    ocultarLoading();
+
 }
 
 // ==============================
-// CREAR TARJETAS
+// TARJETAS
 // ==============================
 
 function crearCard(pokemon) {
+
     const card = document.createElement("article");
     card.classList.add("card");
 
-    const imagen =
-        pokemon.sprites.other["official-artwork"].front_default ||
-        pokemon.sprites.front_default ||
-        "";
+    const habilidades = pokemon.abilities
+        .map(h => capitalizar(h.ability.name))
+        .join(", ");
 
     card.innerHTML = `
-        <img
-            src="${imagen}"
-            alt="${capitalizar(pokemon.name)}"
-            loading="lazy"
-        >
+        <div class="card-inner">
 
-        <div class="card-body">
-            <p class="id">#${pokemon.id}</p>
+            <!-- FRENTE: lo mismo que ya tenías, sin el botón -->
+            <div class="card-front">
+                <img src="${pokemon.sprites.other["official-artwork"].front_default}"
+                     alt="${pokemon.name}">
 
-            <h3>${capitalizar(pokemon.name)}</h3>
-
-            <div class="tipos">
-                ${pokemon.types.map(tipo => `
-                    <span class="tipo ${tipo.type.name}">
-                        ${capitalizar(tipo.type.name)}
+                <div class="card-body">
+                    <p class="id">#${pokemon.id}</p>
+                    <h3>${capitalizar(pokemon.name)}</h3>
+                    <span class="tipo ${pokemon.types[0].type.name}">
+                        ${capitalizar(pokemon.types[0].type.name)}
                     </span>
-                `).join("")}
+                </div>
             </div>
 
-            <button type="button" class="detail-btn">
-                Ver Información
-            </button>
+            <!-- REVERSO: lo que se ve al girar -->
+            <div class="card-back">
+                <h3>${capitalizar(pokemon.name)}</h3>
+                <p><strong>Altura:</strong> ${pokemon.height / 10} m</p>
+                <p><strong>Peso:</strong> ${pokemon.weight / 10} kg</p>
+                <p><strong>Habilidades:</strong> ${habilidades}</p>
+                <button>Ver Información</button>
+            </div>
+
         </div>
     `;
 
-    card.querySelector(".detail-btn").addEventListener("click", () => {
+    // Al hacer CLIC se gira la tarjeta y se abre la ficha técnica
+    card.addEventListener("click", (e) => {
+        if (!e.target.closest("button")) {
+            mostrarDetalle(pokemon);
+            card.classList.toggle("flipped");
+        }
+    });
+
+    // El botón solo abre la ficha, no gira la tarjeta
+    card.querySelector("button").addEventListener("click", (e) => {
+        e.stopPropagation();
         mostrarDetalle(pokemon);
     });
 
@@ -167,130 +165,193 @@ function crearCard(pokemon) {
 }
 
 // ==============================
-// MOSTRAR DETALLE
+// DETALLE
 // ==============================
 
 function mostrarDetalle(pokemon) {
+
     let estadisticas = "";
 
     pokemon.stats.forEach(stat => {
-        estadisticas += `
-            <div class="stat">
-                <div class="stat-header">
-                    <span>${capitalizar(stat.stat.name.replace("-", " "))}</span>
-                    <span>${stat.base_stat}</span>
-                </div>
 
-                <div class="progress">
-                    <span style="width:${Math.min(stat.base_stat, 100)}%"></span>
-                </div>
+        estadisticas += `
+
+        <div class="stat">
+
+            <div class="stat-header">
+
+                <span>
+
+                    ${capitalizar(stat.stat.name)}
+
+                </span>
+
+                <span>
+
+                    ${stat.base_stat}
+
+                </span>
+
             </div>
+
+            <div class="progress">
+
+                <span style="width:${Math.min(stat.base_stat,100)}%"></span>
+
+            </div>
+
+        </div>
+
         `;
+
     });
 
-    const tipos = pokemon.types.map(tipo => `
-        <span class="tipo ${tipo.type.name}">
-            ${capitalizar(tipo.type.name)}
-        </span>
-    `).join("");
+    let tipos = "";
 
-    const habilidades = pokemon.abilities.map(habilidad => `
-        <li>${capitalizar(habilidad.ability.name.replace("-", " "))}</li>
-    `).join("");
+    pokemon.types.forEach(tipo => {
 
-    const imagen =
-        pokemon.sprites.other["official-artwork"].front_default ||
-        pokemon.sprites.front_default ||
-        "";
+        tipos += `
+            <span class="tipo ${tipo.type.name}">
+                ${capitalizar(tipo.type.name)}
+            </span>
+        `;
+
+    });
+
+    let habilidades = "";
+
+    pokemon.abilities.forEach(habilidad => {
+
+        habilidades += `
+            <li>${capitalizar(habilidad.ability.name)}</li>
+        `;
+
+    });
 
     detailContainer.innerHTML = `
+
         <img
-            src="${imagen}"
-            alt="${capitalizar(pokemon.name)}"
-        >
+            src="${pokemon.sprites.other["official-artwork"].front_default}"
+            alt="${pokemon.name}">
 
-        <h2>${capitalizar(pokemon.name)}</h2>
-        <h3>#${pokemon.id}</h3>
+        <h2>
 
-        <div class="tipos">${tipos}</div>
+            ${capitalizar(pokemon.name)}
 
-        <p><strong>Altura:</strong> ${pokemon.height / 10} m</p>
-        <p><strong>Peso:</strong> ${pokemon.weight / 10} kg</p>
+        </h2>
 
-        <h3>Habilidades</h3>
-        <ul>${habilidades}</ul>
+        <h3>
 
-        <h3>Estadísticas</h3>
-        <div class="stats">${estadisticas}</div>
+            #${pokemon.id}
+
+        </h3>
+
+        <div>
+
+            ${tipos}
+
+        </div>
+
+        <p>
+
+            <strong>Altura:</strong>
+            ${pokemon.height / 10} m
+
+        </p>
+
+        <p>
+
+            <strong>Peso:</strong>
+            ${pokemon.weight / 10} kg
+
+        </p>
+
+        <h3>
+
+            Habilidades
+
+        </h3>
+
+        <ul>
+
+            ${habilidades}
+
+        </ul>
+
+        <div class="stats">
+
+            ${estadisticas}
+
+        </div>
+
     `;
 
-    // Desplazarse hacia la ficha técnica
-    detailContainer.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
 }
 
 // ==============================
-// BUSCAR POKÉMON
+// BUSCAR
 // ==============================
 
 async function buscarPokemon() {
-    const nombre = searchInput.value.trim().toLowerCase();
+
+    const nombre = searchInput.value
+        .trim()
+        .toLowerCase();
 
     if (nombre === "") {
-        offset = 0;
+
         cargarPokemon();
+
         return;
+
     }
 
     mostrarLoading();
-    pokemonContainer.innerHTML = "";
-    detailContainer.innerHTML = "";
 
     try {
-        const respuesta = await fetch(
-            `${URL}/${encodeURIComponent(nombre)}`
-        );
+
+        const respuesta = await fetch(`${URL}/${nombre}`);
 
         if (!respuesta.ok) {
-            throw new Error("Pokémon no encontrado");
+
+            throw new Error();
+
         }
 
         const pokemon = await respuesta.json();
 
+        pokemonContainer.innerHTML = "";
+
         crearCard(pokemon);
+
         mostrarDetalle(pokemon);
 
         pokemonCounter.textContent = "1 Pokémon";
 
-        if (previousBtn) previousBtn.disabled = true;
-        if (nextBtn) nextBtn.disabled = true;
+    } catch {
 
-    } catch (error) {
-        console.error("Error en la búsqueda:", error);
+        mostrarError();
 
-        pokemonContainer.innerHTML = "";
-        detailContainer.innerHTML = "";
-
-        pokemonCounter.textContent = "0 Pokémon";
-        mostrarError("Pokémon no encontrado. Verifica el nombre.");
-
-    } finally {
-        ocultarLoading();
     }
+
+    ocultarLoading();
+
 }
 
 // ==============================
-// EVENTOS DE BÚSQUEDA
+// EVENTOS
 // ==============================
 
 searchButton.addEventListener("click", buscarPokemon);
 
-searchInput.addEventListener("keydown", (e) => {
+searchInput.addEventListener("keypress", e => {
+
     if (e.key === "Enter") {
+
         buscarPokemon();
+
     }
+
 });
 
 // ==============================
@@ -298,15 +359,21 @@ searchInput.addEventListener("keydown", (e) => {
 // ==============================
 
 nextBtn.addEventListener("click", () => {
+
     offset += limite;
+
     cargarPokemon();
+
 });
 
 previousBtn.addEventListener("click", () => {
+
     if (offset === 0) return;
 
     offset -= limite;
+
     cargarPokemon();
+
 });
 
 // ==============================
@@ -314,13 +381,18 @@ previousBtn.addEventListener("click", () => {
 // ==============================
 
 function capitalizar(texto) {
-    return texto.charAt(0).toUpperCase() + texto.slice(1);
+
+    return texto.charAt(0).toUpperCase() +
+        texto.slice(1);
+
 }
 
+
+
 // ==============================
-// INICIO AUTOMÁTICO
+// INICIO
 // ==============================
 
-document.addEventListener("DOMContentLoaded", () => {
-    cargarPokemon();
-});
+
+
+cargarPokemon();
