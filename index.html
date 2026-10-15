@@ -1,87 +1,196 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explora una Pokédex interactiva con búsquedas, tipos y estadísticas de Pokémon.">
-    <meta name="theme-color" content="#dc3545">
-    <title>Pokédex | Explora tus Pokémon</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Pokédex SPA</title>
+
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+          rel="stylesheet">
+
 </head>
+
 <body>
-    <header class="hero">
-        <div class="container hero-content">
-            <div class="brand">
-                <span class="pokeball" aria-hidden="true"></span>
-                <span>Pokédex <span class="brand-accent">SPA</span></span>
+
+    <!-- ========================= -->
+    <!-- HEADER -->
+    <!-- ========================= -->
+
+    <header>
+
+        <div class="logo">
+
+            <img
+                src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png"
+                alt="Pokédex">
+
+            <div>
+
+                <h1>Pokédex SPA</h1>
+
+                <p>Proyecto con HTML, CSS y JavaScript</p>
+
             </div>
 
-            <div class="hero-copy">
-                <p class="eyebrow">TU ENCICLOPEDIA POKÉMON</p>
-                <h1>¡Hazte con todos!</h1>
-                <p>Busca, descubre y consulta las habilidades y estadísticas de tus Pokémon favoritos.</p>
-            </div>
         </div>
+
+        <div class="search">
+
+            <input
+                type="text"
+                id="searchInput"
+         detailContainer       placeholder="Buscar Pokémon...">
+
+            <button id="searchButton">
+
+                Buscar
+
+            </button>
+
+        </div>
+
     </header>
 
-    <main class="container main-content">
-        <section class="search-panel" aria-label="Buscar Pokémon">
-            <label for="searchInput">Encuentra un Pokémon</label>
-            <div class="search-row">
-                <input
-                    id="searchInput"
-                    type="search"
-                    placeholder="Ej.: pikachu, charizard o 25"
-                    autocomplete="off"
-                    spellcheck="false"
-                >
-                <button id="searchButton" type="button" class="button button-primary">Buscar</button>
+    <!-- ========================= -->
+    <!-- MAIN -->
+    <!-- ========================= -->
+
+    <main>
+
+        <!-- ========================= -->
+        <!-- LISTA -->
+        <!-- ========================= -->
+
+        <section class="pokemon-list">
+
+            <div class="section-title">
+
+                <h2>Pokémon</h2>
+
+                <span id="pokemonCounter">
+
+                    0 Pokémon
+
+                </span>
+
             </div>
-            <p class="search-hint">Busca por nombre o número. Borra la búsqueda para ver la lista completa.</p>
+
+            <div id="pokemonContainer">
+
+                <!-- JavaScript -->
+
+            </div>
+
+            <div class="pagination">
+
+                <button id="previousBtn">
+
+                    ⬅ Anterior
+
+                </button>
+
+                <button id="nextBtn">
+
+                    Siguiente ➜
+
+                </button>
+
+            </div>
+
         </section>
 
-        <div class="app-layout">
-            <section class="catalog" aria-labelledby="catalogTitle">
-                <div class="section-heading">
-                    <div>
-                        <p class="eyebrow dark">EXPLORAR</p>
-                        <h2 id="catalogTitle">Pokémon disponibles</h2>
-                    </div>
-                    <span id="pokemonCounter" class="counter" aria-live="polite">Cargando...</span>
-                </div>
+        <!-- ========================= -->
+        <!-- DETALLE -->
+        <!-- ========================= -->
 
-                <div id="loading" class="loading hidden" role="status" aria-live="polite">
-                    <span class="spinner" aria-hidden="true"></span>
-                    <span>Cargando Pokémon...</span>
-                </div>
+        <aside class="pokemon-detail">
 
-                <p id="errorMessage" class="error-message hidden" role="alert"></p>
+            <div id="detailContainer">
 
-                <div id="pokemonContainer" class="pokemon-grid" aria-live="polite"></div>
+                <img
+                    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+                    alt="Pokemon">
 
-                <nav class="pagination" aria-label="Navegación por páginas">
-                    <button id="previousBtn" class="button button-outline" type="button" disabled>
-                        ← Anterior
-                    </button>
-                    <button id="nextBtn" class="button button-outline" type="button" disabled>
-                        Siguiente →
-                    </button>
-                </nav>
-            </section>
+                <h2>
 
-            <aside class="detail-panel" aria-labelledby="detailTitle">
-                <div class="detail-heading">
-                    <span class="detail-dot" aria-hidden="true"></span>
-                    <h2 id="detailTitle">Ficha del Pokémon</h2>
-                </div>
-                <div id="detailContainer" class="detail-container" aria-live="polite"></div>
-            </aside>
-        </div>
+                    Pikachu
+
+                </h2>
+
+                <p>
+
+                    Selecciona un Pokémon para ver su información.
+
+                </p>
+
+            </div>
+
+        </aside>
+
     </main>
 
-    <footer class="site-footer">
-        <div class="container">Proyecto educativo de Pokédex · Datos proporcionados por <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a></div>
+    <!-- ========================= -->
+    <!-- LOADING -->
+    <!-- ========================= -->
+
+    <div id="loading" class="hidden">
+
+        <div class="loader"></div>
+
+        <p>
+
+            Cargando Pokémon...
+
+        </p>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- ERROR -->
+    <!-- ========================= -->
+
+    <div id="errorMessage"
+         class="hidden">
+
+        Pokémon no encontrado.
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- FOOTER -->
+    <!-- ========================= -->
+
+    <footer>
+
+        <p>
+
+            Proyecto SPA utilizando PokéAPI
+
+        </p>
+
+        <p>
+
+            HTML • CSS • JavaScript • Fetch API
+
+        </p>
+
     </footer>
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>
