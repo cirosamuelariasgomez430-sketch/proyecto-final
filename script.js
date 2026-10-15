@@ -109,7 +109,7 @@ async function cargarPokemon() {
         }
 
         // Limpiar la ficha técnica al cargar otra página
-        detailContainer.innerHTML = "";
+        // detailContainer.innerHTML = "";
 
     } catch (error) {
         console.error("Error al cargar Pokémon:", error);
