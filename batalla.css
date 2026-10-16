@@ -1,0 +1,442 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#640e24;
+    color:#000000e3;
+}
+
+/* ================================= */
+/* HEADER */
+/* ================================= */
+
+header{
+    background:#010736;
+    color:rgb(0, 0, 0);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:20px 40px;
+    box-shadow:0 5px 10px rgb(255, 0, 0);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.logo img{
+    width:90px;
+}
+
+.logo h1{
+    font-size:2rem;
+}
+
+.logo p{
+    opacity:.8;
+}
+
+/* ================================= */
+/* BUSCADOR */
+/* ================================= */
+
+.search{
+    display:flex;
+    gap:10px;
+}
+
+.search input{
+    width:260px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.search button{
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    background:#629805;
+    color:rgb(113, 222, 4);              /* antes era negro sobre negro */
+    cursor:pointer;
+    transition:.3s;
+}
+
+.search button:hover{
+    background:#d32f2f;
+}
+
+/* ================================= */
+/* MAIN */
+/* ================================= */
+
+main{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+    padding:30px;
+}
+
+/* ================================= */
+/* LISTA */
+/* ================================= */
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+#pokemonCounter{
+    font-weight:bold;
+    color:#5e0908;
+}
+
+/* ================================= */
+/* GRID */
+/* ================================= */
+
+#pokemonContainer{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+/* ================================= */
+/* TARJETAS CON GIRO */
+/* ================================= */
+
+.card{
+    height:340px;
+    perspective:1000px;       /* da profundidad 3D */
+    cursor:pointer;
+}
+
+.card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform .6s;
+    transform-style:preserve-3d;
+}
+
+/* Gira al hacer clic (el JS agrega la clase "flipped") */
+.card.flipped .card-inner{
+    transform:rotateY(180deg);
+}
+
+.card-front,
+.card-back{
+    position:absolute;
+    inset:0;
+    border-radius:15px;
+    overflow:hidden;
+    background:rgb(255, 166, 0);
+    box-shadow:0 8px 18px rgba(0,0,0,.4);
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+}
+
+.card-back{
+    transform:rotateY(180deg);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:10px;
+    padding:20px;
+    text-align:center;
+}
+
+.card-front img{
+    width:100%;
+    height:180px;
+    object-fit:contain;
+    background:#ffd900;
+    padding:20px;
+}
+
+.card-body{
+    padding:18px;
+}
+
+.card-body h3,
+.card-back h3{
+    margin-bottom:10px;
+    text-transform:capitalize;
+}
+
+.id{
+    color:#97f500;
+    font-size:.9rem;
+}
+
+.tipo{
+    display:inline-block;
+    margin-top:10px;
+    padding:6px 15px;
+    border-radius:30px;
+    color:rgb(0, 0, 0);
+    font-size:.9rem;
+}
+
+/* ================================= */
+/* BOTONES */
+/* ================================= */
+
+.card-back button{
+    margin-top:15px;
+    width:100%;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    background:#550604;
+    color:rgb(247, 247, 247);
+    cursor:pointer;
+    transition:.3s;
+}
+
+.card-back button:hover{
+    background:#d32f2f;
+}
+
+/* ================================= */
+/* PANEL LATERAL */
+/* ================================= */
+
+.pokemon-detail{
+    background:rgb(0, 106, 226);
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 8px 18px rgb(85, 11, 11);
+    position:sticky;
+    top:20px;
+    height:fit-content;
+}
+
+#detailContainer{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    text-align:center;
+}
+
+#detailContainer img{
+    width:220px;
+    margin:auto;
+}
+
+#detailContainer h2{
+    text-transform:capitalize;
+}
+
+.stats{
+    margin-top:20px;
+}
+
+.stat{
+    margin-bottom:15px;
+}
+
+.stat-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:5px;
+}
+
+.progress{
+    width:100%;
+    height:12px;
+    background:#b37676;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress span{
+    display:block;
+    height:100%;
+    background:#4caf50;
+}
+
+/* ================================= */
+/* PAGINACION */
+/* ================================= */
+
+.pagination{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:30px;
+}
+
+.pagination button{
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    background:#550909;
+    color:white;              /* antes era negro sobre rojo oscuro */
+    transition:.3s;
+}
+
+.pagination button:hover{
+    background:#3f0505;
+}
+
+.pagination button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+/* ================================= */
+/* LOADING */
+/* ================================= */
+
+#loading{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.9);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    z-index:999;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.loader{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    border:8px solid #ddd;
+    border-top:8px solid #ef5350;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ================================= */
+/* ERROR */
+/* ================================= */
+
+#errorMessage{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    background:#d32f2f;
+    color:white;
+    padding:15px 20px;
+    border-radius:10px;
+    box-shadow:0 8px 15px rgba(0,0,0,.25);
+}
+
+/* ================================= */
+/* FOOTER */
+/* ================================= */
+
+footer{
+    margin-top:30px;
+    background:#212121;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+/* ================================= */
+/* TIPOS */
+/* ================================= */
+
+.fire{ background:#F08030; }
+.water{ background:#6890F0; }
+.grass{ background:#78C850; }
+.electric{ background:#F8D030; color:black; }
+.psychic{ background:#F85888; }
+.ice{ background:#98D8D8; color:black; }
+.dragon{ background:#7038F8; }
+.dark{ background:#705848; }
+.fairy{ background:#EE99AC; }
+.fighting{ background:#C03028; }
+.poison{ background:#A040A0; }
+.ground{ background:#E0C068; color:black; }
+.rock{ background:#B8A038; }
+.bug{ background:#A8B820; }
+.ghost{ background:#705898; }
+.steel{ background:#B8B8D0; color:black; }
+.normal{ background:#A8A878; }
+.flying{ background:#A890F0; }
+
+/* ================================= */
+/* RESPONSIVE */
+/* ================================= */
+
+@media(max-width:992px){
+
+    main{
+        grid-template-columns:1fr;
+    }
+
+    .pokemon-detail{
+        position:relative;
+        top:0;
+    }
+
+}
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .search{
+        width:100%;
+        flex-direction:column;
+    }
+
+    .search input{
+        width:100%;
+    }
+
+}
+
+@media(max-width:480px){
+
+    main{
+        padding:15px;
+    }
+
+    #pokemonContainer{
+        grid-template-columns:1fr;
+    }
+
+    .logo img{
+        width:70px;
+    }
+
+    .logo h1{
+        font-size:1.5rem;
+    }
+
+}
